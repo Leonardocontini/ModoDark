@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager</title>
+    <style>
+        .dark .card{
+            background-color: blue;
+        }
+        .dark{
+            background-image: url(download.jpg);
+        }
+        #mododark{
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: chartreuse;
+            color: black;
+            border-radius: 100%;
+            width: 150px;
+            height: 25px;
+        }
+        .card{
+            width: 100px;
+            height: 100px;
+            background-color: blueviolet;
+        }
+    </style>
+</head>
+<body>
+    <h1>Armazenando dados no localStorage</h1>
+    <label for="title">Titulo</label>
+    <input type="text" id="title">
+    <br>
+    <label for="description">Descrição</label>
+    <input type="text" id="description">
+    <br>
+    <button onclick="savedata()">Salvar</button>
+
+    <h2>Atividades</h2>
+    <div id="savedata"></div>
+    
+    <button onclick="alterarmodo()" id="mododark">modo dark</button>
+    <script>
+
+        function savedata(){
+            let title = document.getElementById("title").value
+            let description = document.getElementById("description").value
+
+            let tarefas = localStorage.getItem("tarefas")
+
+            if(tarefas){
+                tarefas = JSON.parse(tarefas)
+            }else {
+                tarefas = [];
+            }
+
+            tarefas.push({titulo: title, description: description});
+            localStorage.setItem("tarefas", JSON.stringify(tarefas))
+
+            alert("Dados Salvos Com Sucesso")
+            exibirDados()
+        }
+
+        function exibirDados(){
+            let savedata = document.getElementById("savedata")
+            savedata.innerHTML = ""
+
+        let tarefas = localStorage.getItem("tarefas")
+
+        if(tarefas){
+            tarefas = JSON.parse(tarefas)
+            tarefas.forEach(function(tarefa){
+                let card = document.createElement("div")
+                card.classList.add("card")
+
+                let tituloElemento = document.createElement("p")
+                tituloElemento.textContent = tarefa.titulo
+                card.appendChild(tituloElemento);
+
+                let descriptionElemento = document.createElement("p")
+                descriptionElemento.textContent = tarefa.description
+                card.appendChild(descriptionElemento);
+
+                savedata.appendChild(card)
+            })
+        }
+        }
+
+        window.addEventListener("DOMContentLoaded", exibirDados())
+
+        function alterarmodo(){
+            let body = document.getElementsByTagName("body")[0]
+            body.classList.toggle("dark")
+
+            let toggleButton = document.getElementById("mododark")
+            if( body.classList.contains("dark")){
+                toggleButton.textContent = "Modo Dia"
+            }else{
+                toggleButton.textContent = "Modo Noite"
+            }
+        }
+    </script>
+</body>
+</html>
